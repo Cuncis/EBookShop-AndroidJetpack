@@ -2,11 +2,20 @@ package com.example.ebookshop.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-@Entity(tableName = "books_table")
-public class Book {
+import com.android.databinding.library.baseAdapters.BR;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "books_table", foreignKeys = @ForeignKey(entity = Category.class,
+        parentColumns = "id", childColumns = "category_id", onDelete = CASCADE))
+                                                          //if category deletes all the books
+                                                          //belong to the category should also delete
+public class Book extends BaseObservable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "book_id")     // give different name at sqlite table
@@ -15,7 +24,7 @@ public class Book {
     @ColumnInfo(name = "book_name")
     private String bookName;
 
-    @ColumnInfo(name = "book_description")
+    @ColumnInfo(name = "unit_price")
     private String unitPrice;
 
     @ColumnInfo(name = "category_id")
@@ -38,6 +47,7 @@ public class Book {
 
     public void setBookId(int bookId) {
         this.bookId = bookId;
+        notifyPropertyChanged(BR.bookId);
     }
 
     @Bindable
@@ -47,6 +57,7 @@ public class Book {
 
     public void setBookName(String bookName) {
         this.bookName = bookName;
+        notifyPropertyChanged(BR.bookName);
     }
 
     @Bindable
@@ -56,6 +67,7 @@ public class Book {
 
     public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
+        notifyPropertyChanged(BR.unitPrice);
     }
 
     @Bindable
@@ -65,5 +77,6 @@ public class Book {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+        notifyPropertyChanged(BR.categoryId);
     }
 }
