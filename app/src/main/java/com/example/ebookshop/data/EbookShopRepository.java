@@ -19,8 +19,8 @@ public class EbookShopRepository {
     private LiveData<List<Category>> categories;
     private LiveData<List<Book>> books;
 
-    public EbookShopRepository(Context context) {
-        BookDatabase bookDatabase = BookDatabase.getInstance(context);
+    public EbookShopRepository(Application application) {
+        BookDatabase bookDatabase = BookDatabase.getInstance(application);
         categoryDAO = bookDatabase.categoryDAO();
         bookDAO = bookDatabase.bookDAO();
     }

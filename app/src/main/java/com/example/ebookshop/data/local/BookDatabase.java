@@ -1,5 +1,6 @@
 package com.example.ebookshop.data.local;
 
+import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -19,9 +20,9 @@ public abstract class BookDatabase extends RoomDatabase {
 
     private static BookDatabase instance;
 
-    public static synchronized BookDatabase getInstance(Context context) {
+    public static synchronized BookDatabase getInstance(Application application) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context, BookDatabase.class, "books_db")
+            instance = Room.databaseBuilder(application, BookDatabase.class, "books_db")
                     .fallbackToDestructiveMigration()       // means, changing the version number , when we are migrating data, it will delete
                     .addCallback(callback)
                     .build();

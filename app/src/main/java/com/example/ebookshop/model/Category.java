@@ -54,4 +54,9 @@ public class Category extends BaseObservable {
         this.categoryDescription = categoryDescription;
         notifyPropertyChanged(BR.categoryDescription);
     }
+
+    @Override
+    public String toString() {
+        return this.getCategoryName();
+    }
 }
