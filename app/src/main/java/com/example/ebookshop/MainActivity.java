@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.ebookshop.adapter.BookAdapter;
 import com.example.ebookshop.model.Book;
 import com.example.ebookshop.model.Category;
 import com.example.ebookshop.viewmodel.MainViewModel;
@@ -28,9 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
     private ArrayList<Category> categoryList;
+    private ArrayList<Book> bookList;
     private Category selectedCategory;
 
     private Spinner spinner;
+    private RecyclerView rvBooks;
+
+    private BookAdapter bookAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +60,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainViewModel.getBooksOfSelectedCategory(3).observe(this, new Observer<List<Book>>() {
-            @Override
-            public void onChanged(@Nullable List<Book> books) {
-                for (Book b: books) {
-                    Log.e("_logCategory", "onChanged: " + b.getBookName());
-                }
-            }
-        });
-
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +75,41 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Category> categoryArrayAdapter = new ArrayAdapter<Category>(this, R.layout.item_spinner, categoryList);
         categoryArrayAdapter.setDropDownViewResource(R.layout.item_spinner);
         spinner.setAdapter(categoryArrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCategory = (Category) parent.getItemAtPosition(position);
+                String message = " id is " + selectedCategory.getId() + "\n name is " + selectedCategory.getCategoryName() + "\n email is " + selectedCategory.getCategoryDescription();
+
+                Toast.makeText(MainActivity.this, "" + message, Toast.LENGTH_SHORT).show();
+                loadBooksArrayList(selectedCategory.getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do your magic
+            }
+        });
     }
 
-    public void onSelectedItem(AdapterView<?> parent, View view, int pos, long id) {
-        selectedCategory = (Category) parent.getItemAtPosition(pos);
-        String message = " id is " + selectedCategory.getId() + "\n name is " + selectedCategory.getCategoryName() + "\n email is " + selectedCategory.getCategoryDescription();
+    private void loadBooksArrayList(int categoryId) {
+        mainViewModel.getBooksOfSelectedCategory(categoryId).observe(this, new Observer<List<Book>>() {
+            @Override
+            public void onChanged(@Nullable List<Book> books) {
+                bookList = (ArrayList<Book>) books;
+                loadRecyclerView();
+            }
+        });
+    }
 
-        Toast.makeText(this, "" + message, Toast.LENGTH_SHORT).show();
+    private void loadRecyclerView() {
+        rvBooks = findViewById(R.id.rv_books);
+        rvBooks.setLayoutManager(new LinearLayoutManager(this));
+        rvBooks.setHasFixedSize(true);
+        bookAdapter = new BookAdapter();
+        rvBooks.setAdapter(bookAdapter);
+
+        bookAdapter.setBooks(bookList);
     }
 
     @Override
