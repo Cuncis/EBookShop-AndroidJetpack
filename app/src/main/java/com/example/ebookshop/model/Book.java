@@ -4,10 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-
-import com.android.databinding.library.baseAdapters.BR;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -15,7 +11,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         parentColumns = "id", childColumns = "category_id", onDelete = CASCADE))
                                                           //if category deletes all the books
                                                           //belong to the category should also delete
-public class Book extends BaseObservable {
+public class Book {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "book_id")     // give different name at sqlite table
@@ -40,43 +36,43 @@ public class Book extends BaseObservable {
         this.categoryId = categoryId;
     }
 
-    @Bindable
+//    @Bindable
     public int getBookId() {
         return bookId;
     }
 
     public void setBookId(int bookId) {
         this.bookId = bookId;
-        notifyPropertyChanged(BR.bookId);
+//        notifyPropertyChanged(BR.bookId);
     }
 
-    @Bindable
+//    @Bindable
     public String getBookName() {
         return bookName;
     }
 
     public void setBookName(String bookName) {
         this.bookName = bookName;
-        notifyPropertyChanged(BR.bookName);
+//        notifyPropertyChanged(BR.bookName);
     }
 
-    @Bindable
+//    @Bindable
     public String getUnitPrice() {
         return unitPrice;
     }
 
     public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
-        notifyPropertyChanged(BR.unitPrice);
+//        notifyPropertyChanged(BR.unitPrice);
     }
 
-    @Bindable
+//    @Bindable
     public int getCategoryId() {
         return categoryId;
     }
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
-        notifyPropertyChanged(BR.categoryId);
+//        notifyPropertyChanged(BR.categoryId);
     }
 }
